@@ -12,6 +12,7 @@ async function techRadar() {
     const packageJsonFiles = await getPackageJsonFiles(repositories);
     const dependencies = await getAllDependencies(packageJsonFiles);
 
+    downloadResult(dependencies)
     console.log(dependencies);
 
     return dependencies;
@@ -134,6 +135,17 @@ function getDependenciesFromJson(repo_name, json, dependencies) {
           version: json.devDependencies[dependency]
         });
     }
+}
+
+function downloadResult(result) {
+    const json_result = JSON.stringify(result, undefined, 2);
+    const file_result = new File(json_result, 'dependencies', { type: 'application/json'});
+    const result_url = window.URL.createObjectURL(file_result);
+
+    const link = document.createElement('a');
+    link.download = 'data.json';
+    link.href = window.URL.createObjectURL(result_url);
+    link.click();
 }
 
 async function getRepositories() {
