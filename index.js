@@ -148,9 +148,12 @@ function enableResultDownloading(result) {
     link.href = window.URL.createObjectURL(blob_result);
 
     const downloadBtn = document.querySelector('.download');
+    downloadBtn.disabled = false;
     downloadBtn.addEventListener('click', () => {
         link.click();
     })
+
+    console.log('Done. Now you can download your results.')
 }
 
 async function getRepositories() {
