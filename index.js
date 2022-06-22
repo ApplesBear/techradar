@@ -138,13 +138,12 @@ function getDependenciesFromJson(repo_name, json, dependencies) {
 }
 
 function downloadResult(result) {
-    const json_result = JSON.stringify(result, undefined, 2);
-    const file_result = new File(json_result, 'dependencies', { type: 'application/json'});
-    const result_url = window.URL.createObjectURL(file_result);
+    const json_string = JSON.stringify(result, undefined, 2);
 
-    const link = document.createElement('a');
+    let link = document.createElement('a');
     link.download = 'data.json';
-    link.href = window.URL.createObjectURL(result_url);
+    let blob = new Blob([json_string], {type: 'text/plain'});
+    link.href = window.URL.createObjectURL(blob);
     link.click();
 }
 
