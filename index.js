@@ -138,13 +138,18 @@ function getDependenciesFromJson(repo_name, json, dependencies) {
 }
 
 function downloadResult(result) {
-    const json_string = JSON.stringify(result, undefined, 2);
+    const string_result = JSON.stringify(result, undefined, 2);
+    const blob_result = new Blob([string_result], {type: 'application/json'});
 
-    let link = document.createElement('a');
-    link.download = 'data.json';
-    let blob = new Blob([json_string], {type: 'text/plain'});
-    link.href = window.URL.createObjectURL(blob);
-    link.click();
+    const link = document.createElement('a');
+    link.download = 'dependencies.json';
+    link.href = window.URL.createObjectURL(blob_result);
+
+    const downloadBtn = document.querySelector('.download');
+    downloadBtn.disabled = false;
+    downloadBtn.addEventListener('click', () => {
+        link.click();
+    })
 }
 
 async function getRepositories() {
