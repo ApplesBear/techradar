@@ -6,16 +6,18 @@ btn.addEventListener('click', techRadar);
 let owner, octokit;
 
 async function techRadar() {
+    const state = document.querySelector('.state');
+    state.innerText = 'Please, wait. It will take some time...';
+
     setVariables();
 
     const repositories = await getFrontendRepositories();
     const packageJsonFiles = await getPackageJsonFiles(repositories);
     const dependencies = await getAllDependencies(packageJsonFiles);
 
-    downloadResult(dependencies)
-    console.log(dependencies);
+    enableResultDownloading(dependencies);
 
-    return dependencies;
+    state.innerText = '';
 }
 
 function setVariables() {
@@ -40,7 +42,7 @@ async function getFrontendRepositories() {
         const tagsArray = tags.data;
 
         tagsArray.find((tag) => {
-          if (tag.name === 'v28.1.1') {
+          if (tag.name === 'frontend') {
             result.push(repositoriesArray[i]);
             return true;
           }
@@ -137,16 +139,15 @@ function getDependenciesFromJson(repo_name, json, dependencies) {
     }
 }
 
-function downloadResult(result) {
+function enableResultDownloading(result) {
     const string_result = JSON.stringify(result, undefined, 2);
     const blob_result = new Blob([string_result], {type: 'application/json'});
 
     const link = document.createElement('a');
-    link.download = 'dependencies.json';
+    link.download = `${owner}-frontend-dependencies.json`;
     link.href = window.URL.createObjectURL(blob_result);
 
     const downloadBtn = document.querySelector('.download');
-    downloadBtn.disabled = false;
     downloadBtn.addEventListener('click', () => {
         link.click();
     })
