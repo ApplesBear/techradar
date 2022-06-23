@@ -31,8 +31,7 @@ function setVariables() {
 async function getFrontendRepositories() {
     console.log('Getting repositories...');
 
-    const repositories = getRepositories();
-    const repositoriesArray = repositories.data;
+    const repositoriesArray = await getRepositories();
     const result = [];
 
     for (let i = 0; i < repositoriesArray.length; i++) {
@@ -153,14 +152,22 @@ function enableResultDownloading(result) {
         link.click();
     })
 
-    console.log('Done. Now you can download your results.')
+    console.log('Done. Now you can download your results.');
 }
 
 async function getRepositories() {
-    let result = await octokit.request(`GET /orgs/${owner}/repos`);
-    console.log(result.headers.link)
+    let page = 1;
+    let result = [];
+    let response = await octokit.request(`GET /orgs/${owner}/repos`);
+    result = [...response.data];
+    console.log(typeof result.headers.link);
 
-    return result
+    while (response.headers.link.search('next') !== -1) {
+        response = await octokit.request(`GET /orgs/${owner}/repos?page=${++page}`);
+        result = [...result, ...response.data];
+    }
+
+    return result;
 }
 
 async function getTags(repo_name) {
