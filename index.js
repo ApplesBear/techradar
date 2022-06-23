@@ -157,7 +157,7 @@ function enableResultDownloading(result) {
 }
 
 async function getRepositories() {
-    let result = octokit.request(`GET /orgs/${owner}/repos`);
+    let result = await octokit.request(`GET /orgs/${owner}/repos`);
     console.log(result)
 
     return result
