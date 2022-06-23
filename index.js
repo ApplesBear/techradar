@@ -79,7 +79,7 @@ async function getPackageJsonFiles(repositories) {
 }
 
 async function parseNextTreeLvl(repo, tree = [], results) {
-    treeArray = tree.filter((element) => {
+    const treeArray = tree.filter((element) => {
         if (element.path === 'package.json') {
             results.push({
               repo_name: repo.name,
