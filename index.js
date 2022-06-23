@@ -42,7 +42,7 @@ async function getFrontendRepositories() {
         const tagsArray = await getTags(repositoriesArray[i].name);
 
         tagsArray.find((tag) => {
-          if (tag.name === 'v28.1.1') {
+          if (tag.name === 'frontend') {
             result.push(repositoriesArray[i]);
             return true;
           }
