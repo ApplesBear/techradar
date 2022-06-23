@@ -116,8 +116,6 @@ async function getAllDependencies(packageJsons) {
 function getDependenciesFromJson(repo_name, json, dependencies) {
 
     for (const dependency in json.dependencies) {
-        console.log('Parse package.json file...');
-
         if (!(dependency in dependencies)) {
             dependencies[dependency] = {
               uses: 0,
