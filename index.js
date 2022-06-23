@@ -88,7 +88,7 @@ function parseNextTreeLvl(repo, tree = [], results) {
 
         return element.type === 'tree';
     });
-
+    
     tree.forEach((nextTree) => {
         parseNextTreeLvl(repo, nextTree, results);
     });
