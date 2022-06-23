@@ -18,7 +18,7 @@ async function techRadar() {
     if (Object.keys(dependencies).length > 0) {
         enableResultDownloading(dependencies);
     } else {
-        state.innerText = 'Sorry, we did not find any dependencies. Are you sure your repositories have "frontend" tags?';
+        state.innerText = 'Sorry, we did not find any dependencies. Are you sure your repositories have "frontend" labels?';
     }
 
     state.innerText = '';
@@ -43,10 +43,10 @@ async function getFrontendRepositories() {
     for (let i = 0; i < repositoriesArray.length; i++) {
         console.log('Filter frontend repositories...');
 
-        const tagsArray = await getTags(repositoriesArray[i].name);
+        const labelsArray = await getLabels(repositoriesArray[i].name);
 
-        tagsArray.find((tag) => {
-          if (tag.name === 'frontend') {
+        labelsArray.find((label) => {
+          if (label.name === 'frontend') {
             result.push(repositoriesArray[i]);
             return true;
           }
@@ -181,14 +181,14 @@ async function getRepositories() {
     return result;
 }
 
-async function getTags(repo_name) {
+async function getLabels(repo_name) {
     let page = 1;
     let result = [];
-    let response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags?per_page=100`);
+    let response = await octokit.request(`GET /repos/${owner}/${repo_name}/labels?per_page=100`);
     result = [...response.data];
 
     while (response.headers.link && response.headers.link.search('next') !== -1) {
-        response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags?per_page=100&page=${++page}`);
+        response = await octokit.request(`GET /repos/${owner}/${repo_name}/labels?per_page=100&page=${++page}`);
         result = [...result, ...response.data];
     }
 
