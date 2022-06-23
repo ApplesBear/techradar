@@ -7,7 +7,7 @@ let owner, octokit;
 
 async function techRadar() {
     const state = document.querySelector('.state');
-    state.innerText = 'Please, wait, it will take some time. You can monitor progress in console.';
+    state.innerText = 'Please, wait. You can monitor progress in console.';
 
     setVariables();
 
