@@ -78,8 +78,8 @@ async function getPackageJsonFiles(repositories) {
     return packageJsons;
 }
 
-function parseNextTreeLvl(repo, tree = [], results) {
-    tree = tree.filter((element) => {
+function parseNextTreeLvl(repo, treeArray = [], results) {
+    treeArray = tree.filter((element) => {
         if (element.path === 'package.json') {
             results.push({
               repo_name: repo.name,
@@ -88,10 +88,11 @@ function parseNextTreeLvl(repo, tree = [], results) {
 
         return element.type === 'tree';
     });
-    
-    tree.forEach((nextTree) => {
-        parseNextTreeLvl(repo, nextTree, results);
-    });
+
+    for (let i = 0; i < treeArray.length; i++) {
+        const nextTreeArray = await getTree(repo.name, treeArray[i].sha);
+        parseNextTreeLvl(repo, nextTreeArray, results);
+    }
 }
 
 async function getAllDependencies(packageJsons) {
