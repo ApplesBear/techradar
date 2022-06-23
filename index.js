@@ -37,7 +37,7 @@ function setVariables() {
 }
 
 async function getFrontendRepositories() {
-    console.log(`Getting repositories from ${owner}...`);
+    console.log(`Getting repositories from ${owner}:`);
 
     const repositoriesArray = await getRepositories();
     const result = [];
@@ -63,10 +63,11 @@ async function getFrontendRepositories() {
 }
 
 async function getPackageJsonFiles(repositories) {
+    console.log('Getting package.json files:');
     const packageJsons = [];
 
     for (let i = 0; i < repositories.length; i++) {
-        console.log('Getting package.json files...');
+        console.log('Search for package.json files...');
 
         const commitsArray = await getCommits(repositories[i].name);
 
@@ -106,10 +107,11 @@ async function parseNextTreeLvl(repo, tree = [], results, depth) {
 }
 
 async function getAllDependencies(packageJsons) {
+    console.log('Getting dependencies:');
     const dependencies = {};
 
     for (let i = 0; i < packageJsons.length; i++) {
-        console.log('Parsing package.json files...');
+        console.log('Parsing package.json file...');
 
         const file = await getPackageJson(packageJsons[i].repo_name, packageJsons[i].sha);
         const json = JSON.parse(atob(file.content));
