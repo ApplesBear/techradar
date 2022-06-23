@@ -70,7 +70,7 @@ async function getPackageJsonFiles(repositories) {
 
         const treeArray = await getTree(repositories[i].name, headCommit.commit.tree.sha);
 
-        await parseNextTreeLvl(repositories[i], treeArray, packageJsons);
+        await parseNextTreeLvl(repositories[i], treeArray, packageJsons, 0);
     }
 
     console.log(`We found ${packageJsons.length} package.json files.`);
@@ -78,7 +78,8 @@ async function getPackageJsonFiles(repositories) {
     return packageJsons;
 }
 
-async function parseNextTreeLvl(repo, tree = [], results) {
+async function parseNextTreeLvl(repo, tree = [], results, depth) {
+    console.log(depth)
     const treeArray = tree.filter((element) => {
         if (element.path === 'package.json') {
             results.push({
@@ -89,8 +90,12 @@ async function parseNextTreeLvl(repo, tree = [], results) {
         return element.type === 'tree';
     });
 
+    if (depth > 3) {
+        return;
+    }
+
     for (let i = 0; i < treeArray.length; i++) {
-        const nextTreeArray = await getTree(repo.name, treeArray[i].sha);
+        const nextTreeArray = await getTree(repo.name, treeArray[i].sha, ++depth);
         await parseNextTreeLvl(repo, nextTreeArray, results);
     }
 }
