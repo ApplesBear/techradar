@@ -70,7 +70,7 @@ async function getPackageJsonFiles(repositories) {
 
         const treeArray = await getTree(repositories[i].name, headCommit.commit.tree.sha);
 
-        parseNextTreeLvl(repositories[i], treeArray, packageJsons);
+        await parseNextTreeLvl(repositories[i], treeArray, packageJsons);
     }
 
     console.log(`We found ${packageJsons.length} package.json files.`);
