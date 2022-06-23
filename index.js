@@ -15,7 +15,11 @@ async function techRadar() {
     const packageJsonFiles = await getPackageJsonFiles(repositories);
     const dependencies = await getAllDependencies(packageJsonFiles);
 
-    enableResultDownloading(dependencies);
+    if (Object.keys(dependencies).length > 0) {
+        enableResultDownloading(dependencies);
+    } else {
+        state.innerText = 'Sorry, we did not find any dependencies. Are you sure your repositories have "frontend" tags?';
+    }
 
     state.innerText = '';
 }
