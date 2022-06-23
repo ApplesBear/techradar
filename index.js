@@ -166,11 +166,11 @@ function enableResultDownloading(result) {
 async function getRepositories() {
     let page = 1;
     let result = [];
-    let response = await octokit.request(`GET /orgs/${owner}/repos`);
+    let response = await octokit.request(`GET /orgs/${owner}/repos?per_page=100`);
     result = [...response.data];
 
     while (response.headers.link && response.headers.link.search('next') !== -1) {
-        response = await octokit.request(`GET /orgs/${owner}/repos?page=${++page}`);
+        response = await octokit.request(`GET /orgs/${owner}/repos?per_page=100&page=${++page}`);
         result = [...result, ...response.data];
     }
 
@@ -180,11 +180,11 @@ async function getRepositories() {
 async function getTags(repo_name) {
     let page = 1;
     let result = [];
-    let response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags`);
+    let response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags?per_page=100`);
     result = [...response.data];
 
     while (response.headers.link && response.headers.link.search('next') !== -1) {
-        response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags?page=${++page}`);
+        response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags?per_page=100&page=${++page}`);
         result = [...result, ...response.data];
     }
 
