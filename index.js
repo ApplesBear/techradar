@@ -29,8 +29,6 @@ function setVariables() {
 }
 
 async function getFrontendRepositories() {
-    console.log('Getting repositories...');
-
     const repositoriesArray = await getRepositories();
     const result = [];
 
@@ -52,11 +50,11 @@ async function getFrontendRepositories() {
 }
 
 async function getPackageJsonFiles(repositories) {
-    console.log('Getting package.json files...');
-
     const packageJsons = [];
 
     for (let i = 0; i < repositories.length; i++) {
+        console.log('Getting package.json files...');
+
         const commits = await getCommits(repositories[i].name);
         const commitsArray = commits.data;
 
@@ -102,9 +100,10 @@ async function getAllDependencies(packageJsons) {
 
 
 function getDependenciesFromJson(repo_name, json, dependencies) {
-    console.log('Parse package.json files...');
 
     for (const dependency in json.dependencies) {
+        console.log('Parse package.json file...');
+
         if (!(dependency in dependencies)) {
             dependencies[dependency] = {
               uses: 0,
@@ -156,13 +155,16 @@ function enableResultDownloading(result) {
 }
 
 async function getRepositories() {
+    console.log('Getting repositories...');
+
     let page = 1;
     let result = [];
     let response = await octokit.request(`GET /orgs/${owner}/repos`);
     result = [...response.data];
-    console.log(typeof response.headers.link);
 
     while (response.headers.link.search('next') !== -1) {
+        console.log('Getting repositories...');
+
         response = await octokit.request(`GET /orgs/${owner}/repos?page=${++page}`);
         result = [...result, ...response.data];
     }
@@ -171,7 +173,17 @@ async function getRepositories() {
 }
 
 async function getTags(repo_name) {
-    return octokit.request(`GET /repos/${owner}/${repo_name}/tags`);
+    let page = 1;
+    let result = [];
+    let response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags`);
+    result = [...response.data];
+
+    while (response.headers.link.search('next') !== -1) {
+        response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags?page=${++page}`);
+        result = [...result, ...response.data];
+    }
+
+    return result;
 }
 
 async function getCommits(repo_name) {
