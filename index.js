@@ -1,11 +1,15 @@
 import { Octokit } from "https://cdn.skypack.dev/octokit";
 
-const btn = document.querySelector('button');
-btn.addEventListener('click', techRadar);
+const startBtn = document.querySelector('button');
+const downloadBtn = document.querySelector('.download');
+startBtn.addEventListener('click', techRadar);
 
 let owner, octokit;
 
 async function techRadar() {
+    startBtn.disabled = true;
+    downloadBtn.disabled = true;
+
     const state = document.querySelector('.state');
     state.innerText = 'Please, wait. You can monitor progress in console.';
 
@@ -70,7 +74,7 @@ async function getPackageJsonFiles(repositories) {
 
         const treeArray = await getTree(repositories[i].name, headCommit.commit.tree.sha);
 
-        await parseNextTreeLvl(repositories[i], treeArray, packageJsons, 0);
+        await parseNextTreeLvl(repositories[i], treeArray, packageJsons, 1);
     }
 
     console.log(`We found ${packageJsons.length} package.json files.`);
@@ -79,7 +83,6 @@ async function getPackageJsonFiles(repositories) {
 }
 
 async function parseNextTreeLvl(repo, tree = [], results, depth) {
-    console.log(depth)
     const treeArray = tree.filter((element) => {
         if (element.path === 'package.json') {
             results.push({
@@ -164,7 +167,7 @@ function enableResultDownloading(result) {
     link.download = `${owner}-frontend-dependencies.json`;
     link.href = window.URL.createObjectURL(blob_result);
 
-    const downloadBtn = document.querySelector('.download');
+    startBtn.disabled = false;
     downloadBtn.disabled = false;
     downloadBtn.addEventListener('click', () => {
         link.click();
