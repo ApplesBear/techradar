@@ -160,7 +160,7 @@ async function getRepositories() {
     let result = [];
     let response = await octokit.request(`GET /orgs/${owner}/repos`);
     result = [...response.data];
-    console.log(typeof result.headers.link);
+    console.log(typeof response.headers.link);
 
     while (response.headers.link.search('next') !== -1) {
         response = await octokit.request(`GET /orgs/${owner}/repos?page=${++page}`);
