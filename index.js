@@ -33,7 +33,7 @@ function setVariables() {
 }
 
 async function getFrontendRepositories() {
-    console.log('Getting repositories...');
+    console.log(`Getting repositories from ${owner}...`);
 
     const repositoriesArray = await getRepositories();
     const result = [];
