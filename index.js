@@ -2,15 +2,15 @@ import { Octokit } from "https://cdn.skypack.dev/octokit";
 
 const startBtn = document.querySelector('button');
 const downloadBtn = document.querySelector('.download');
+const state = document.querySelector('.state');
+let owner, octokit;
+
 startBtn.addEventListener('click', techRadar);
 
-let owner, octokit;
 
 async function techRadar() {
     startBtn.disabled = true;
     downloadBtn.disabled = true;
-
-    const state = document.querySelector('.state');
     state.innerText = 'Please, wait. You can monitor progress in console.';
 
     setVariables();
@@ -25,7 +25,7 @@ async function techRadar() {
         state.innerText = 'Sorry, we did not find any dependencies. Are you sure your repositories have "frontend" labels?';
     }
 
-    state.innerText = '';
+    state.innerText = 'Done. Please, download your result.';
 }
 
 function setVariables() {
@@ -37,7 +37,7 @@ function setVariables() {
 }
 
 async function getFrontendRepositories() {
-    console.log(`Getting repositories from ${owner}:`);
+    console.log(`Getting repositories from ${owner}...`);
 
     const repositoriesArray = await getRepositories();
     const result = [];
@@ -63,7 +63,6 @@ async function getFrontendRepositories() {
 }
 
 async function getPackageJsonFiles(repositories) {
-    console.log('Getting package.json files:');
     const packageJsons = [];
 
     for (let i = 0; i < repositories.length; i++) {
@@ -107,7 +106,6 @@ async function parseNextTreeLvl(repo, tree = [], results, depth) {
 }
 
 async function getAllDependencies(packageJsons) {
-    console.log('Getting dependencies:');
     const dependencies = {};
 
     for (let i = 0; i < packageJsons.length; i++) {
