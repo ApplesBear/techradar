@@ -31,7 +31,7 @@ function setVariables() {
 async function getFrontendRepositories() {
     console.log('Getting repositories...');
 
-    const repositories = await getRepositories(); // todo: fetch all pages (now is 30)
+    const repositories = getRepositories();
     const repositoriesArray = repositories.data;
     const result = [];
 
@@ -158,7 +158,7 @@ function enableResultDownloading(result) {
 
 async function getRepositories() {
     let result = await octokit.request(`GET /orgs/${owner}/repos`);
-    console.log(result)
+    console.log(result.headers.link)
 
     return result
 }
