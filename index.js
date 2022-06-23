@@ -35,8 +35,7 @@ async function getFrontendRepositories() {
     for (let i = 0; i < repositoriesArray.length; i++) {
         console.log('Filter frontend repositories...');
 
-        const tags = await getTags(repositoriesArray[i].name);
-        const tagsArray = tags.data;
+        const tagsArray = await getTags(repositoriesArray[i].name);
 
         tagsArray.find((tag) => {
           if (tag.name === 'v28.1.1') {
@@ -55,13 +54,11 @@ async function getPackageJsonFiles(repositories) {
     for (let i = 0; i < repositories.length; i++) {
         console.log('Getting package.json files...');
 
-        const commits = await getCommits(repositories[i].name);
-        const commitsArray = commits.data;
+        const commitsArray = await getCommits(repositories[i].name);
 
         const headCommit = commitsArray.shift();
 
-        const tree = await getTree(repositories[i].name, headCommit.commit.tree.sha);
-        const treeArray = tree.data.tree;
+        const treeArray = await getTree(repositories[i].name, headCommit.commit.tree.sha);
 
         parseNextTreeLvl(repositories[i], treeArray, packageJsons);
     }
@@ -187,13 +184,19 @@ async function getTags(repo_name) {
 }
 
 async function getCommits(repo_name) {
-    return octokit.request(`GET /repos/${owner}/${repo_name}/commits`);
+    const response = await octokit.request(`GET /repos/${owner}/${repo_name}/commits`);
+
+    return response.data;
 }
 
 async function getTree(repo_name, tree_sha) {
-    return octokit.request(`GET /repos/${owner}/${repo_name}/git/trees/${tree_sha}`);
+    const response = await octokit.request(`GET /repos/${owner}/${repo_name}/git/trees/${tree_sha}`);
+
+    return response.data.tree;
 }
 
 async function getPackageJson(repo_name, packageFile_sha) {
-    return octokit.request(`GET /repos/${owner}/${repo_name}/git/blobs/${packageFile_sha}`);
+    const response = await octokit.request(`GET /repos/${owner}/${repo_name}/git/blobs/${packageFile_sha}`);
+
+    return response.data;
 }
