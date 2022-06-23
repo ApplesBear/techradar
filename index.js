@@ -89,7 +89,7 @@ async function getAllDependencies(packageJsons) {
 
     for (let i = 0; i < packageJsons.length; i++) {
         const file = await getPackageJson(packageJsons[i].repo_name, packageJsons[i].sha);
-        const json = JSON.parse(atob(file.data.content));
+        const json = JSON.parse(atob(file.content));
 
         getDependenciesFromJson(packageJsons[i].repo_name, json, dependencies);
     }
@@ -174,8 +174,6 @@ async function getTags(repo_name) {
     result = [...response.data];
 
     while (response.headers.link && response.headers.link.search('next') !== -1) {
-        console.log('Searching for "frontend" tag in current repo...');
-
         response = await octokit.request(`GET /repos/${owner}/${repo_name}/tags?page=${++page}`);
         result = [...result, ...response.data];
     }
