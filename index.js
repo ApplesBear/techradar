@@ -94,9 +94,11 @@ async function parseNextTreeLvl(repo, tree = [], results, depth) {
         return;
     }
 
+    depth++;
+
     for (let i = 0; i < treeArray.length; i++) {
         const nextTreeArray = await getTree(repo.name, treeArray[i].sha);
-        await parseNextTreeLvl(repo, nextTreeArray, results, ++depth);
+        await parseNextTreeLvl(repo, nextTreeArray, results, depth);
     }
 }
 
