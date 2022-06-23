@@ -7,7 +7,7 @@ let owner, octokit;
 
 async function techRadar() {
     const state = document.querySelector('.state');
-    state.innerText = 'Please, wait. It will take some time...';
+    state.innerText = 'Please, wait, it will take some time. You can monitor progress in console.';
 
     setVariables();
 
@@ -34,6 +34,8 @@ async function getFrontendRepositories() {
     const repositoriesArray = await getRepositories();
     const result = [];
 
+    console.log(`We found ${repositoriesArray.length} repositories.`);
+
     for (let i = 0; i < repositoriesArray.length; i++) {
         console.log('Filter frontend repositories...');
 
@@ -46,6 +48,8 @@ async function getFrontendRepositories() {
           }
         });
     }
+
+    console.log(`We found ${result.length} frontend repositories.`);
 
     return result;
 }
@@ -64,6 +68,8 @@ async function getPackageJsonFiles(repositories) {
 
         parseNextTreeLvl(repositories[i], treeArray, packageJsons);
     }
+
+    console.log(`We found ${packageJsons.length} package.json files.`);
 
     return packageJsons;
 }
@@ -88,11 +94,15 @@ async function getAllDependencies(packageJsons) {
     const dependencies = {};
 
     for (let i = 0; i < packageJsons.length; i++) {
+        console.log('Parsing package.json files...');
+
         const file = await getPackageJson(packageJsons[i].repo_name, packageJsons[i].sha);
         const json = JSON.parse(atob(file.content));
 
         getDependenciesFromJson(packageJsons[i].repo_name, json, dependencies);
     }
+
+    console.log(`We found ${Object.keys(dependencies).length} dependencies.`);
 
     return dependencies;
 }
