@@ -40,14 +40,13 @@ async function getFrontendRepositories() {
   state.innerText += `\n 👷‍♀️ Getting repositories from ${owner}`;
 
   const repositoriesArray = await getRepositories();
-  let result = [];
 
   state.innerText += `\n🥳 We've found ${repositoriesArray.length} repositories`;
   state.innerText += '\n🕵️‍♀️ Filter frontend repositories';
 
-  result = repositoriesArray.filter(({ topics, archived, name }) => topics.includes('frontend') && !archived);
+  const result = repositoriesArray.filter(({ topics, archived, name }) => topics.includes('frontend') && !archived);
 
-  state.innerText += `\n🥳 We found ${result.length} frontend repositories`;
+  state.innerText += `\n🥳 We've found ${result.length} frontend repositories`;
 
   return result;
 }
