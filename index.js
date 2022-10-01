@@ -22,10 +22,8 @@ async function techRadar() {
     enableResultDownloading(dependencies);
   } else {
     state.innerText =
-      '\n😔 Sorry, we did not find any dependencies. Are you sure your repositories have "frontend" topic?';
+      '\n 😔 Sorry, we did not find any dependencies. Are you sure your repositories have "frontend" topic?';
   }
-
-  state.innerText += '\n ✅ Done. Please, download your result';
 }
 
 function setVariables() {
@@ -37,16 +35,16 @@ function setVariables() {
 }
 
 async function getFrontendRepositories() {
-  state.innerText += `\n 👷‍♀️ Getting repositories from ${owner}`;
+  state.innerText += `\n 👷‍♀️ Getting repositories from '${owner}' organisation`;
 
   const repositoriesArray = await getRepositories();
 
-  state.innerText += `\n🥳 We've found ${repositoriesArray.length} repositories`;
-  state.innerText += '\n🕵️‍♀️ Filter frontend repositories';
+  state.innerText += `\n 🥳 We've found ${repositoriesArray.length} repositories`;
+  state.innerText += '\n 🕵️‍♀️ Filtering frontend repositories';
 
   const result = repositoriesArray.filter(({ topics, archived, name }) => topics.includes('frontend') && !archived);
 
-  state.innerText += `\n🥳 We've found ${result.length} frontend repositories`;
+  state.innerText += `\n 🥳 We've found ${result.length} frontend repositories`;
 
   return result;
 }
@@ -55,7 +53,7 @@ async function getPackageJsonFiles(repositories) {
   const packageJsons = [];
 
   for (let i = 0; i < repositories.length; i++) {
-    state.innerText += `\n🔎 Looking for package.json files in ${repositories[i].name}`;
+    state.innerText += `\n 🔎 Searching for package.json files in '${repositories[i].name}' repo`;
 
     const commitsArray = await getCommits(repositories[i].name);
 
@@ -69,7 +67,7 @@ async function getPackageJsonFiles(repositories) {
     await parseNextTreeLvl(repositories[i], treeArray, packageJsons, 1);
   }
 
-  state.innerText += `\n🥳 We've found ${packageJsons.length} package.json files`;
+  state.innerText += `\n 🥳 We've found ${packageJsons.length} package.json files`;
 
   return packageJsons;
 }
@@ -102,7 +100,7 @@ async function getAllDependencies(packageJsons) {
   const dependencies = {};
 
   for (let i = 0; i < packageJsons.length; i++) {
-    state.innerText += `\n 🤔 Parsing package.json file in repo ${packageJsons[i].repo_name}`;
+    state.innerText += `\n 🤔 Parsing package.json file in '${packageJsons[i].repo_name}' repo`;
 
     const file = await getPackageJson(
       packageJsons[i].repo_name,
@@ -113,7 +111,7 @@ async function getAllDependencies(packageJsons) {
     getDependenciesFromJson(packageJsons[i].repo_name, json, dependencies);
   }
 
-  state.innerText += `\n We've found ${
+  state.innerText += `\n 📜 We've found ${
     Object.keys(dependencies).length
   } dependencies.`;
 
@@ -173,7 +171,7 @@ function enableResultDownloading(result) {
     link.click();
   });
 
-  state.innerText += `\n💾 Done. Now you can download your results`;
+  state.innerText += `\n 💾 Done. Now you can download your results`;
 }
 
 async function getRepositories() {
